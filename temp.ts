@@ -4,7 +4,7 @@ const random = (min: number, max: number) => {
     return Math.floor(Math.random() * (max - min)) + min;
 }
 
-const MAIN_GAME_LOOP = 800; //ms
+const MAIN_GAME_LOOP = 2000; //ms
 const MAX_BRANCH_OFFSET = 4;
 const MAX_ELEMENT_OFFSET = 4;
 
@@ -103,6 +103,16 @@ class Game {
         return this.counter;
     }
 
+    isGameEnd(): boolean {
+        return this.counter >= 100;
+    }
+
+    isNextLevel() {
+        if (this.counter >= 30) {
+            this.level += 1;
+        }
+    }
+
     private fallElement(branchId: number) {
         this.fails += 1;
     }
@@ -184,26 +194,41 @@ class Timer {
     }
 }
 
+const game = new Game( levels, MAX_BRANCH_OFFSET, MAX_ELEMENT_OFFSET );
 
 const dropTimer = new Timer(MAIN_GAME_LOOP, MAIN_GAME_LOOP * 2);
 const moveTimer = new Timer(MAIN_GAME_LOOP, MAIN_GAME_LOOP * 3);
 
 const mainGameInterval = setInterval(() => {
 
-    console.log("MAIN_LOOP")
+    /* 
+    game.scan();
 
-    if (dropTimer.canDo()) {
-        console.log("DROP")
+    if (game.isGameEnd()) {
+        clearInterval(mainGameInterval);
     }
+
+    if (game.isNextLevel()) {
+        dropTimer.setTimer(game.getDropInterval());
+        moveTimer.setTimer(game.getMoveInterval());
+    }
+
+
+     */
+    console.log("MAIN_LOOP")
 
     if (moveTimer.canDo()) {
         console.log("MOVE")
+        // game.moveItems();
+    }
+
+    if (dropTimer.canDo()) {
+        console.log("DROP")
+        // game.dropItem();
     }
 
     dropTimer.tick();
     moveTimer.tick();
-
-    //game.scan();
 
 }, MAIN_GAME_LOOP);
 
