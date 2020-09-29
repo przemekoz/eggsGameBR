@@ -1,0 +1,56 @@
+/* 
+
+
+const game = new Game(levels, MAX_BRANCH_OFFSET, MAX_ELEMENT_OFFSET);
+
+const dropTimer = new Timer(MAIN_GAME_LOOP, MAIN_GAME_LOOP * 2);
+const moveTimer = new Timer(MAIN_GAME_LOOP, MAIN_GAME_LOOP * 3);
+
+const mainGameInterval = setInterval(() => {
+
+  game.scan();
+
+  if (game.isNextLevel()) {
+      dropTimer.setTimer(game.getDropInterval());
+      moveTimer.setTimer(game.getMoveInterval());
+  }
+
+
+  console.log("MAIN_LOOP")
+  
+  if (moveTimer.canDo()) {
+    console.log("MOVE")
+    // game.moveItems();
+  }
+  
+  if (dropTimer.canDo()) {
+    console.log("DROP")
+    // game.dropItem();
+  }
+  
+  dropTimer.tick();
+  moveTimer.tick();
+  
+  if (game.isGameEnd()) {
+    clearInterval(mainGameInterval);
+  }
+  
+}, MAIN_GAME_LOOP);
+
+*/
+
+
+// const game = new Game( levels, MAX_BRANCH_OFFSET, MAX_ELEMENT_OFFSET );
+// game.main();
+
+// const dropInterval = setInterval( () => {
+//   console.log("DROP")
+//   game.dropItem();
+// //   console.log( game.getState() );
+// }, levels[0].timeBetweenDropped );
+
+// const moveInterval = setInterval( () => {
+//     console.log("MOVE")
+//   game.moveItems();
+// //   console.log( game.getState() );
+// }, levels[0].speed );
