@@ -1,10 +1,10 @@
-import { random } from "./utils";
-import { BasketPosition, Side } from "./types";
-import { Level } from "./levels";
-import { EscapingItemInterface } from "./Escaping/types";
-import { EscapingFactory, EscapingFactoryItems } from "./Escaping/factory";
-import { DroppedFactory, DroppedFactoryItems } from "./Dropped/factory";
-import { DroppedItemInterface } from "./Dropped/types";
+import { random } from "../shared/utils";
+import { BasketPosition, Side } from "../shared/types";
+import { Level } from "../levels";
+import { EscapingItemInterface } from "../Escaping/types";
+import { EscapingFactory, EscapingFactoryItems } from "../Escaping/factory";
+import { DroppedFactory, DroppedFactoryItems } from "../Dropped/factory";
+import { DroppedItemInterface } from "../Dropped/types";
 
 export type GameState = ( number | DroppedItemInterface )[][];
 export type ChickenState = ( number | EscapingItemInterface )[][];
