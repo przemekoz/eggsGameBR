@@ -8,6 +8,8 @@ import { DroppedItemInterface } from "../Dropped/types";
 
 export type GameState = ( number | DroppedItemInterface )[][];
 export type ChickenState = ( number | EscapingItemInterface )[][];
+export type SideOffset = { side: number, offset: number };
+export type BranchOffset = { branch: number, offset: number };
 
 export class GameClass {
   private level = 0;
@@ -53,8 +55,7 @@ export class GameClass {
 
   moveItems() {
     const newState = this.initState();
-    this.getBranchOffsetArray().forEach( item => {
-      const { branchId, offset } = item;
+    this.getBranchOffsetArray().forEach( ( { branchId, offset } ) => {
       if ( this.state[ branchId ][ offset ] !== 0 ) {
         const element = this.state[ branchId ][ offset ];
         newState[ branchId ][ offset + 1 ] = element;
@@ -65,9 +66,8 @@ export class GameClass {
 
   moveChicken() {
     const newChickenState = this.initChickenState();
-    this.getChickenMoveArray().forEach( item => {
-      const { side, offset } = item;
-      if ( this.chickenState[ side ][ offset ] !== 0 && (offset + 1) < this.maxChickenPos ) {
+    this.getChickenMoveArray().forEach( ( { side, offset }: SideOffset ) => {
+      if ( this.chickenState[ side ][ offset ] !== 0 && ( offset + 1 ) < this.maxChickenPos ) {
         const chicken = this.chickenState[ side ][ offset ];
         newChickenState[ side ][ offset + 1 ] = chicken;
       }
@@ -86,6 +86,7 @@ export class GameClass {
     this.getBranchOffsetArray().forEach( item => {
       const { branchId, offset } = item;
       if ( offset === this.maxElementOffset && this.state[ branchId ][ offset ] !== 0 ) {
+        this.moveItems();
         if ( this.basketPosition === branchId ) {
           this.increaseScore();
         } else {
@@ -132,16 +133,32 @@ export class GameClass {
   }
 
   isNextLevel(): boolean {
-    if ( this.score >= ( this.level + 1 ) * 30 ) {
+    if ( this.score >= ( this.level + 1 ) * 20 ) {
       return true;
     }
     return false;
   }
 
-  getFalls(): ChickenState {
-    return this.chickenState;
+  getFalls(): SideOffset[] {
+    const arr: SideOffset[] = [];
+    this.getChickenMoveArray().forEach( ( { side, offset }: SideOffset ) => {
+      if ( this.chickenState[ side ][ offset ] !== 0 ) {
+        arr.push( { side, offset } );
+      }
+    } );
+    return arr;
   }
-  
+
+  getEggs(): BranchOffset[] {
+    const arr: BranchOffset[] = [];
+    this.getBranchOffsetArray().forEach( ( { branchId, offset } ) => {
+      if ( this.state[ branchId ][ offset ] !== 0 ) {
+        arr.push( { branch: branchId, offset } )
+      }
+    } );
+    return arr;
+  }
+
   reset() {
     this.score = 0;
     this.fails = 0;
@@ -160,7 +177,7 @@ export class GameClass {
     if ( [ 0, 3 ].includes( branchId ) ) {
       this.dropChicken( Side.LEFT );
       return;
-    } 
+    }
     this.dropChicken( Side.RIGHT );
   }
 
@@ -205,7 +222,7 @@ export class GameClass {
     const arr = [];
     for ( let side = 0; side < 2; side++ ) {
       for ( let offset = 0; offset < this.maxChickenPos; offset++ ) {
-        arr.push( {side, offset} );
+        arr.push( { side, offset } );
       }
     }
     return arr;
